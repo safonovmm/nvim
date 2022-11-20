@@ -100,6 +100,16 @@ autocmd CursorMoved * exe printf('match TabLineSel /\V\<%s\>/', escape(expand('<
 " endfunction
 " set statusline=
 " set statusline+=%{StatuslineGit()}
+
+" disable search highlight
+set nohlsearch
+
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
+set ignorecase
+set smartcase
 "====================================================================================================================
 
 " Configure LSP through rust-tools.nvim plugin.
@@ -146,6 +156,7 @@ require('rust-tools').setup(opts)
 -- require('go').setup()
 
 EOF
+
 "====================================================================================================================
 
 " Setup Completion
@@ -252,7 +263,7 @@ let g:airline_theme='minimalist'
 "vim-go
 
 let g:go_fmt_command = "goimports"
-let g:go_auto_type_info = 1
+" let g:go_auto_type_info = 1
 let g:vim_markdown_folding_disabled = 1
 autocmd FileType go nmap gi  <Plug>(go-implements)
 autocmd FileType go nnoremap  gr :GoReferrers<CR>
@@ -264,4 +275,6 @@ nnoremap <F6> :GoDebugStepOut<CR>
 nnoremap <F7> :GoDebugContinue<CR>
 nnoremap <F8> :GoDebugNext<CR>
 nnoremap <F9> :GoDebugRestart<CR>
+
+let g:go_highlight_function_calls = 1
 "====================================================================================================================
