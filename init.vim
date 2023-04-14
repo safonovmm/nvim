@@ -3,15 +3,6 @@ call plug#begin('~/.vim/plugged')
 " Collection of common configurations for the Nvim LSP client
 Plug 'neovim/nvim-lspconfig'
 
-" Other usefull completion sources
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-buffer'
-
-" See hrsh7th's other plugins for more completion sources!
-
-" Snippet engine
-Plug 'hrsh7th/vim-vsnip'
-
 " Fuzzy finder
 " Optional
 Plug 'nvim-lua/popup.nvim'
