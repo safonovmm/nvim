@@ -38,7 +38,10 @@ Plug 'preservim/nerdtree'
 Plug 'fatih/molokai'
 " Plug 'gilgigilgil/anderson.vim'
 Plug 'rafi/awesome-vim-colorschemes'
+
 Plug 'doums/darcula'
+"Plug 'briones-gabriel/darcula-solid.nvim'
+"Plug 'rktjmp/lush.nvim'
 
 Plug 'airblade/vim-gitgutter'
 
@@ -53,13 +56,21 @@ Plug 'fatih/vim-go'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'ray-x/guihua.lua', {'do': 'cd lua/fzy && make' }
 
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"
+"Plug 'maralla/completor.vim'
+
 call plug#end()
 "====================================================================================================================
 " Some basic stuff
 
 " colorscheme molokai
 " colorscheme sonokai
+
 colorscheme darcula
+
+"colorscheme darcula-solid
+"set termguicolors
 
 " show lines numbers
 " set number
@@ -161,40 +172,40 @@ EOF
 
 " Setup Completion
 " See https://github.com/hrsh7th/nvim-cmp#basic-configuration
-lua <<EOF
-local cmp = require'cmp'
-cmp.setup({
-  -- Enable LSP snippets
-  snippet = {
-    expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body)
-    end,
-  },
-  mapping = {
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    -- Add tab support
-    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
-    ['<Tab>'] = cmp.mapping.select_next_item(),
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.close(),
-    ['<CR>'] = cmp.mapping.confirm({
-      behavior = cmp.ConfirmBehavior.Insert,
-      select = true,
-    })
-  },
-
-  -- Installed sources
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'vsnip' },
-    { name = 'path' },
-    { name = 'buffer' },
-  },
-})
-EOF
+"lua <<EOF
+"local cmp = require'cmp'
+"cmp.setup({
+"  -- Enable LSP snippets
+"  snippet = {
+"    expand = function(args)
+"        vim.fn["vsnip#anonymous"](args.body)
+"    end,
+"  },
+"  mapping = {
+"    ['<C-p>'] = cmp.mapping.select_prev_item(),
+"    ['<C-n>'] = cmp.mapping.select_next_item(),
+"    -- Add tab support
+"    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+"    ['<Tab>'] = cmp.mapping.select_next_item(),
+"    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+"    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+"    ['<C-Space>'] = cmp.mapping.complete(),
+"    ['<C-e>'] = cmp.mapping.close(),
+"    ['<CR>'] = cmp.mapping.confirm({
+"      behavior = cmp.ConfirmBehavior.Insert,
+"      select = true,
+"    })
+"  },
+"
+"  -- Installed sources
+"  sources = {
+"    { name = 'nvim_lsp' },
+"    { name = 'vsnip' },
+"    { name = 'path' },
+"    { name = 'buffer' },
+"  },
+"})
+"EOF
 
 
 "====================================================================================================================
@@ -278,3 +289,55 @@ nnoremap <F9> :GoDebugRestart<CR>
 
 let g:go_highlight_function_calls = 1
 "====================================================================================================================
+" Use coc.nvim for autocompletion
+let g:coc_global_extensions = ['coc-go']
+
+" Set up Go language server for coc.nvim
+autocmd FileType go let g:coc_server_prog = 'gopls'
+
+" Use tab for trigger completion with characters ahead and navigate
+" NOTE: There's always complete item selected by default, you may want to enable
+" no select by `"suggest.noselect": true` in your configuration file
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Disable errors highlighting
+let b:coc_diagnostic_disable=1
+
+"====================================================================================================================
+" completor options
+"filetype plugin on
+"set omnifunc=syntaxcomplete#Complete
+"set completeopt=longest,menuone
+"set completeopt-=preview
+"au filetype go inoremap <buffer> . .<C-x><C-o>
+"
+"function! InsertTabWrapper()
+"  if pumvisible()
+"    return "\<c-n>"
+"  endif
+"  let col = col('.') - 1
+"  if !col || getline('.')[col - 1] !~ '\k'
+"    return "\<tab>"
+"  else
+"    return "\<c-x>\<c-o>"
+"  endif
+"endfunction
+"inoremap <expr><tab> InsertTabWrapper()
+"inoremap <expr><s-tab> pumvisible()?"\<c-p>":"\<c-d>
+
+highlight CocSearch ctermfg=250 guifg=#bcbcbc
