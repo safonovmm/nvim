@@ -3,23 +3,11 @@ call plug#begin('~/.vim/plugged')
 " Collection of common configurations for the Nvim LSP client
 Plug 'neovim/nvim-lspconfig'
 
-" Completion framework
-Plug 'hrsh7th/nvim-cmp'
-
-" LSP completion source for nvim-cmp
-Plug 'hrsh7th/cmp-nvim-lsp'
-
-" Snippet completion source for nvim-cmp
-Plug 'hrsh7th/cmp-vsnip'
-
 " Other usefull completion sources
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-buffer'
 
 " See hrsh7th's other plugins for more completion sources!
-
-" To enable more of the features of rust-analyzer, such as inlay hints and more!
-Plug 'simrat39/rust-tools.nvim'
 
 " Snippet engine
 Plug 'hrsh7th/vim-vsnip'
@@ -30,18 +18,9 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
-" Color scheme used in the GIFs!
-" Plug 'arcticicestudio/nord-vim'
-
 Plug 'preservim/nerdtree'
 
-Plug 'fatih/molokai'
-" Plug 'gilgigilgil/anderson.vim'
-Plug 'rafi/awesome-vim-colorschemes'
-
 Plug 'doums/darcula'
-"Plug 'briones-gabriel/darcula-solid.nvim'
-"Plug 'rktjmp/lush.nvim'
 
 Plug 'airblade/vim-gitgutter'
 
@@ -51,29 +30,16 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'
 
 Plug 'fatih/vim-go'
-" Plug 'ray-x/go.nvim'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'ray-x/guihua.lua', {'do': 'cd lua/fzy && make' }
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"
-"Plug 'maralla/completor.vim'
 
 call plug#end()
 "====================================================================================================================
 " Some basic stuff
-
-" colorscheme molokai
-" colorscheme sonokai
-
 colorscheme darcula
-
-"colorscheme darcula-solid
-"set termguicolors
-
-" show lines numbers
-" set number
 
 " use relative numbers for lines
 set number relativenumber
@@ -104,14 +70,6 @@ highlight CursorLine guibg=#303000 ctermbg=234
 " highlight in file the word to which the cursor is pointin
 autocmd CursorMoved * exe printf('match TabLineSel /\V\<%s\>/', escape(expand('<cword>'), '/\'))
 
-" git branch in statusline
-" function! StatuslineGit()
-"   let l:branchname = GitBranch()
-"   return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
-" endfunction
-" set statusline=
-" set statusline+=%{StatuslineGit()}
-
 " disable search highlight
 set nohlsearch
 
@@ -121,92 +79,6 @@ set expandtab
 
 set ignorecase
 set smartcase
-"====================================================================================================================
-
-" Configure LSP through rust-tools.nvim plugin.
-" rust-tools will configure and enable certain LSP features for us.
-" See https://github.com/simrat39/rust-tools.nvim#configuration
-lua <<EOF
-local nvim_lsp = require'lspconfig'
-
-local opts = {
-    tools = { -- rust-tools options
-      --  autoSetHints = true,
-      --  hover_with_actions = true,
-      --  inlay_hints = {
-      --      show_parameter_hints = false,
-      --      parameter_hints_prefix = "",
-      --      other_hints_prefix = "",
-      --  },
-        inlay_hints = {
-            auto = false, 
-        }
-    },
-
-    -- all the opts to send to nvim-lspconfig
-    -- these override the defaults set by rust-tools.nvim
-    -- see https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#rust_analyzer
-    server = {
-        -- on_attach is a callback called when the language server attachs to the buffer
-        -- on_attach = on_attach,
-        settings = {
-            -- to enable rust-analyzer settings visit:
-            -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
-            ["rust-analyzer"] = {
-                -- enable clippy on save
-                checkOnSave = {
-                    command = "clippy"
-                },
-            }
-        }
-    },
-}
-
-require('rust-tools').setup(opts)
-
--- require('go').setup()
-
-EOF
-
-"====================================================================================================================
-
-" Setup Completion
-" See https://github.com/hrsh7th/nvim-cmp#basic-configuration
-"lua <<EOF
-"local cmp = require'cmp'
-"cmp.setup({
-"  -- Enable LSP snippets
-"  snippet = {
-"    expand = function(args)
-"        vim.fn["vsnip#anonymous"](args.body)
-"    end,
-"  },
-"  mapping = {
-"    ['<C-p>'] = cmp.mapping.select_prev_item(),
-"    ['<C-n>'] = cmp.mapping.select_next_item(),
-"    -- Add tab support
-"    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
-"    ['<Tab>'] = cmp.mapping.select_next_item(),
-"    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-"    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-"    ['<C-Space>'] = cmp.mapping.complete(),
-"    ['<C-e>'] = cmp.mapping.close(),
-"    ['<CR>'] = cmp.mapping.confirm({
-"      behavior = cmp.ConfirmBehavior.Insert,
-"      select = true,
-"    })
-"  },
-"
-"  -- Installed sources
-"  sources = {
-"    { name = 'nvim_lsp' },
-"    { name = 'vsnip' },
-"    { name = 'path' },
-"    { name = 'buffer' },
-"  },
-"})
-"EOF
-
 
 "====================================================================================================================
 " Stuff from https://sharksforarms.dev/posts/neovim-rust/
@@ -317,27 +189,7 @@ inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
 
 " Disable errors highlighting
 let b:coc_diagnostic_disable=1
+" Set gray color for autocompletion highlighting
+highlight CocSearch ctermfg=250 guifg=#bcbcbc
 
 "====================================================================================================================
-" completor options
-"filetype plugin on
-"set omnifunc=syntaxcomplete#Complete
-"set completeopt=longest,menuone
-"set completeopt-=preview
-"au filetype go inoremap <buffer> . .<C-x><C-o>
-"
-"function! InsertTabWrapper()
-"  if pumvisible()
-"    return "\<c-n>"
-"  endif
-"  let col = col('.') - 1
-"  if !col || getline('.')[col - 1] !~ '\k'
-"    return "\<tab>"
-"  else
-"    return "\<c-x>\<c-o>"
-"  endif
-"endfunction
-"inoremap <expr><tab> InsertTabWrapper()
-"inoremap <expr><s-tab> pumvisible()?"\<c-p>":"\<c-d>
-
-highlight CocSearch ctermfg=250 guifg=#bcbcbc
