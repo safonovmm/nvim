@@ -27,6 +27,8 @@ Plug 'ray-x/guihua.lua', {'do': 'cd lua/fzy && make' }
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+Plug 'rmagatti/auto-session'
+
 call plug#end()
 "====================================================================================================================
 " Some basic stuff
@@ -105,6 +107,7 @@ autocmd BufWritePre *.rs lua vim.lsp.buf.formatting_sync(nil, 200)
 " nerdtree
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" autocmd bufenter * if (winnr("$") == 1 && bufname('%') =~ 'NERD_tree_') | q | endif
 let g:NERDTreeWinSize=30
 nmap <C-h> <C-w>h
 nmap <C-j> <C-w>j
@@ -115,6 +118,8 @@ nmap <C-l> <C-w>l
 let NERDTreeShowHidden=1
 let NERDTreeIgnore=['\.git$']
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" fix for working properly with auto-sessions plugin 
+"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && !filereadable(expand('~/.vim/auto-sessions/'. getcwd() .'.vim')) | NERDTree | endif
 "====================================================================================================================
 " Telescope
 
@@ -142,6 +147,12 @@ let g:vim_markdown_folding_disabled = 1
 autocmd FileType go nmap gi  <Plug>(go-implements)
 autocmd FileType go nnoremap  gr :GoReferrers<CR>
 autocmd FileType go nnoremap  gn :GoRename<CR>
+autocmd FileType go nnoremap  gs :GoFillStruct<CR>
+autocmd FileType go nnoremap  gc :GoDoc<CR>
+autocmd FileType go nnoremap  ge :GoErrCheck<CR>
+autocmd FileType go nnoremap  gf :GoIfErr<CR>
+autocmd FileType go nnoremap  gx :GoExtract<CR>
+
 nnoremap <F3> :GoDebugTest<CR>
 nnoremap <F4> :GoDebugBreakpoint<CR>
 nnoremap <F5> :GoDebugStep<CR>
@@ -184,3 +195,26 @@ let b:coc_diagnostic_disable=1
 highlight CocSearch ctermfg=250 guifg=#bcbcbc
 
 "====================================================================================================================
+" auto-session
+" let g:auto_session_enabled = 1
+" let g:auto_session_root_dir = 
+" let g:auto_session_enable_last_session = 0
+
+lua << EOF
+local opts = {
+  log_level = 'info',
+  auto_session_enable_last_session = false,
+  auto_session_root_dir = "~/.vim/auto-sessions/",
+  auto_session_enabled = true,
+  auto_save_enabled = nil,
+  auto_restore_enabled = false,
+  auto_session_suppress_dirs = nil,
+  auto_session_use_git_branch = nil,
+  -- the configs below are lua only
+  bypass_session_save_file_types = nil
+}
+
+require('auto-session').setup(opts)
+EOF
+
+"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && !filereadable(expand("~/.vim/auto-sessions/". fnamemodify(getcwd(), ':p:h:t') . '.vim')) | NERDTree | endif
