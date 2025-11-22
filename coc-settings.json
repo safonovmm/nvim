@@ -1,6 +1,0 @@
-{
-    "diagnostic.enable": false,
-    "coc.preferences.colorScheme": "darcula",
-    "coc.preferences.highlight.currentLine": false,
-    "coc.preferences.highlight.enabled": false
-}
